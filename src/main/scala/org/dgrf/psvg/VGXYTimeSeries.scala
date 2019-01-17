@@ -8,11 +8,11 @@ import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import scala.collection.mutable
 
 class VGXYTimeSeries () extends java.io.Serializable {
-  private var sparkSession:SparkSession = null
-  private var timeSeriesWithSeqfile:String = null
-  private var inputTimeSeriesFLat: Dataset[Row] = null
-  private var inputTimeSeries: Dataset[Row] = null
-  private var inputPositiveTimeSeries: Dataset[Row] = null
+  private var sparkSession:SparkSession = _
+  private var timeSeriesWithSeqfile:String = _
+  private var inputTimeSeriesFLat: Dataset[Row] = _
+  private var inputTimeSeries: Dataset[Row] = _
+  private var inputPositiveTimeSeries: Dataset[Row] = _
 
   def this (sparkSession:SparkSession,timeSeriesWithSeqfile:String)  {
     this()
@@ -22,15 +22,7 @@ class VGXYTimeSeries () extends java.io.Serializable {
     moveTimeSeriesToPositivePlane()
     joinAndAggregateTimeSeries()
   }
-  def getInputTimeSeries():Dataset[Row] = {
-    inputTimeSeries
-  }
-  def getInputTimeSeriesPositive():Dataset[Row] = {
-    inputPositiveTimeSeries
-  }
-  def getVGFlatTimeSeries():Dataset[Row] = {
-    inputTimeSeriesFLat
-  }
+
 
   private def moveTimeSeriesToPositivePlane (): Unit = {
 
@@ -189,3 +181,4 @@ class VGXYTimeSeries () extends java.io.Serializable {
   }*/
 
 }
+

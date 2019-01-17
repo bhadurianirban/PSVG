@@ -1,13 +1,12 @@
 package org.dgrf.psvg
 
 
-import scala.math.log
-import org.apache.spark.graphx.{Edge, Graph}
-import org.graphframes._
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.catalyst.encoders.RowEncoder
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
+import org.graphframes._
+
+import scala.math.log
 
 class VisibilityGraph()  extends java.io.Serializable {
 
@@ -30,11 +29,9 @@ class VisibilityGraph()  extends java.io.Serializable {
 /*  def getVisibilityGraph():Graph[String,Double] = {
     vgGraph
   }*/
-  def getVisibilityGraphAdjacencyList():Dataset[Row] = {
-    vgAdjacencyEdges
-  }
 
-  def calculateDegreeDistribution(psvgParams: PsvgParams = new PsvgParams(15,0.85,true,0.7,2)): VisibityDegreeDistribution = {
+
+  def calculateDegreeDistribution(psvgParams: PsvgParams = PsvgParams(15, 0.85, includeIntercept = true, 0.7, 2)): VisibityDegreeDistribution = {
   //def calculateDegreeDistribution(psvgParams: PsvgParams = new PsvgParams(15,0.85,true,0.7,2)): Unit = {
 
     println(psvgParams.degreeDistDataPartFromStart)

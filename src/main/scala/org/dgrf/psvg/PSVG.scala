@@ -2,10 +2,7 @@ package org.dgrf.psvg
 
 import java.io.{BufferedWriter, File, FileWriter}
 
-import org.apache.spark.sql.{Dataset, Row, SQLContext, SparkSession}
-import org.apache.spark.sql.functions.{collect_list, min}
-import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
-
+import org.apache.spark.sql.SparkSession
 
 import scala.io.Source
 

@@ -1,20 +1,18 @@
 package org.dgrf.psvg
 
-import java.io.File
-
-import org.apache.spark.sql.{Dataset, Row, SaveMode, SparkSession}
 import org.apache.spark.sql.catalyst.encoders.RowEncoder
 import org.apache.spark.sql.functions.{collect_list, min}
 import org.apache.spark.sql.types.{DoubleType, LongType, StructField, StructType}
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 
 import scala.collection.mutable
 
 class VGUniformTimeSeries extends java.io.Serializable {
-  private var sparkSession:SparkSession = null
-  private var timeSeriesWithSeqfile:String = null
-  private var inputTimeSeriesFLat: Dataset[Row] = null
-  private var inputTimeSeries: Dataset[Row] = null
-  private var inputPositiveTimeSeries: Dataset[Row] = null
+  private var sparkSession:SparkSession = _
+  private var timeSeriesWithSeqfile:String = _
+  private var inputTimeSeriesFLat: Dataset[Row] = _
+  private var inputTimeSeries: Dataset[Row] = _
+  private var inputPositiveTimeSeries: Dataset[Row] = _
 
   def this (sparkSession:SparkSession,timeSeriesWithSeqfile:String)  {
     this()
@@ -24,21 +22,12 @@ class VGUniformTimeSeries extends java.io.Serializable {
     moveTimeSeriesToPositivePlane()
     joinAndAggregateTimeSeries()
   }
-  def getInputTimeSeries():Dataset[Row] = {
-    inputTimeSeries
-  }
-  def getInputTimeSeriesPositive():Dataset[Row] = {
-    inputPositiveTimeSeries
-  }
-  def getVGFlatTimeSeries():Dataset[Row] = {
-    inputTimeSeriesFLat
-  }
 
 
 
   private def moveTimeSeriesToPositivePlane (): Unit = {
 
-    var minYval = inputTimeSeries.agg(min(inputTimeSeries("yval"))).first().getDouble(0)
+    val minYval = inputTimeSeries.agg(min(inputTimeSeries("yval"))).first().getDouble(0)
     if (minYval < 0 ) {
       inputPositiveTimeSeries = inputTimeSeries.select((inputTimeSeries("yval")-minYval).alias("yval"),inputTimeSeries("id"))
     } else {
@@ -67,7 +56,7 @@ class VGUniformTimeSeries extends java.io.Serializable {
     inputTimeSeries = sqlContext.read.schema(schema).option("delimiter",",").csv("file://"+timeSeriesWithSeqfile)
   }
   def createVisibilityGraph(): VisibilityGraph = {
-    val vgAdjacencyEdges = createVGAdjEdges
+    val vgAdjacencyEdges = createVGAdjEdges()
     //vgAdjacencyEdges.show(5)
     val vg = new VisibilityGraph(sparkSession,vgAdjacencyEdges)
     vg
